@@ -1,0 +1,36 @@
+# playbooks/configure_auditd.yml
+---
+- name: Configure Auditd Ubuntu
+  hosts: linux_endpoints
+  become: true
+
+  tasks:
+    - name: Ensure auditd is installed
+      ansible.builtin.apt:
+        name: auditd
+        state: present
+
+    - name: Push ANAOS audit rules
+      ansible.builtin.copy:
+        dest: /etc/audit/rules.d/anaos.rules
+        content: |
+          ## ANAOS Audit Rules
+          # Execution events
+          -a always,exit -F arch=b64 -S execve -k exec_cmd
+          # Sensitive file access
+          -w /etc/passwd -p r -k sensitive_read
+          -w /etc/shadow -p r -k sensitive_read
+          # Privilege escalation indicators
+          -a always,exit -F arch=b64 -S setuid -S setgid -k priv_change
+          # Network configuration changes
+          -a always,exit -F arch=b64 -S sethostname -k net_cfg
+        owner: root
+        mode: '0640'
+
+    - name: Reload audit rules
+      ansible.builtin.command: augenrules --load
+
+    - name: Restart auditd
+      ansible.builtin.systemd:
+        name: auditd
+        state: restarted

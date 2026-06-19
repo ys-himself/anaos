@@ -1,0 +1,73 @@
+<!--
+  ANAOS Custom Detection Rules
+  File: local_rules.xml
+  Deploy to: /var/ossec/etc/rules/local_rules.xml on the Wazuh Manager
+  Group: anaos_soc_unified
+
+  Maps four MITRE ATT&CK techniques to custom Wazuh correlation rules:
+    100115 -> T1110     Brute Force: Web Login          (chains on Suricata SID 86600)
+    100116 -> T1190     Exploit Public-Facing App (SQLi) (chains on Suricata SID 86601)
+    100051 -> T1218.010 Regsvr32 / Squiblydoo            (chains on Sysmon SID 61603)
+    100104 -> T1595.002 Active Scanning (Nmap recon)     (chains on the "web" rule group)
+-->
+<group name="anaos_soc_unified">
+
+  <!-- ============================================================
+       Rule 100115 | T1110 - Brute Force: Web Login
+       Chains on Suricata SID 86600 (threshold-based HTTP POST rule)
+       Level 12 = CRITICAL
+       ============================================================== -->
+  <rule id="100115" level="12">
+    <if_sid>86600</if_sid>
+    <field name="alert.signature">Web Login Brute Force</field>
+    <description>ALERT: Web Login Brute Force</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+
+  <!-- ============================================================
+       Rule 100116 | T1190 - Exploit Public-Facing Application
+       Chains on Suricata SID 86601 (PCRE SQL injection pattern)
+       Level 12 = CRITICAL
+       ============================================================== -->
+  <rule id="100116" level="12">
+    <if_sid>86601</if_sid>
+    <field name="alert.signature">ANAOS - SQL Injection Attempt</field>
+    <description>ANAOS CRITICAL: SQL Injection Attack Detected</description>
+    <mitre>
+      <id>T1190</id>
+    </mitre>
+  </rule>
+
+  <!-- ============================================================
+       Rule 100051 | T1218.010 - Signed Binary Proxy: Regsvr32
+       Chains on Wazuh default Sysmon rule SID 61603 (process create)
+       PCRE2 case-insensitive match on parentImage field
+       Level 12 = CRITICAL
+       ============================================================== -->
+  <rule id="100051" level="12">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.parentImage" type="pcre2">(?i)regsvr32\.exe</field>
+    <description>CRITICAL ANAOS: Process spawned by Regsvr32 (Payload Execution)</description>
+    <mitre>
+      <id>T1218.010</id>
+    </mitre>
+  </rule>
+
+  <!-- ============================================================
+       Rule 100104 | T1595.002 - Active Scanning: Vuln Scanning
+       Applies to any rule in the "web" group
+       PCRE2 alternation: Nmap NSE UA or bare "nmap" string
+       Level 10 = HIGH
+       ============================================================== -->
+  <rule id="100104" level="10">
+    <if_group>web</if_group>
+    <match type="pcre2">Nmap Scripting Engine|nmap</match>
+    <description>ANAOS CRITICAL: Nmap Recon Scan against Web Application</description>
+    <mitre>
+      <id>T1595.002</id>
+    </mitre>
+  </rule>
+
+</group>

@@ -1,0 +1,39 @@
+# playbooks/deploy_wazuh_agent_linux.yml
+---
+- name: Deploy Wazuh Agent Linux
+  hosts: linux_endpoints   # Targets: Ubuntu endpoint + Juice Shop
+  become: true
+  vars:
+    wazuh_manager: "<WAZUH_MANAGER_IP>"
+    wazuh_version: "4.x.x"
+
+  tasks:
+    - name: Add Wazuh GPG key
+      ansible.builtin.apt_key:
+        url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+        state: present
+
+    - name: Add Wazuh APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+        state: present
+        update_cache: true
+
+    - name: Install wazuh-agent package
+      ansible.builtin.apt:
+        name: "wazuh-agent={{ wazuh_version }}"
+        state: present
+
+    - name: Set Manager IP in ossec.conf
+      ansible.builtin.lineinfile:
+        path: /var/ossec/etc/ossec.conf
+        regexp: '<address>.*</address>'
+        line: "<address>{{ wazuh_manager }}</address>"
+        backrefs: true
+
+    - name: Enable and start Wazuh agent
+      ansible.builtin.systemd:
+        name: wazuh-agent
+        enabled: true
+        state: started
+        daemon_reload: true

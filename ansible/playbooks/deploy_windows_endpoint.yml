@@ -1,0 +1,40 @@
+# playbooks/deploy_windows_endpoint.yml
+---
+- name: Deploy Wazuh Agent and Sysmon Windows 11
+  hosts: windows_endpoints
+  gather_facts: false
+  vars:
+    wazuh_manager: "<WAZUH_MANAGER_IP>"
+    sysmon_installer: "C:\\Temp\\Sysmon64.exe"
+    sysmon_config: "C:\\Temp\\sysmonconfig.xml"
+
+  tasks:
+    - name: Install Wazuh agent (MSI)
+      ansible.windows.win_package:
+        path: "\\\\<FILE_SERVER>\\wazuh-agent-4.x.x-1.msi"
+        arguments: >
+          WAZUH_MANAGER="{{ wazuh_manager }}"
+          WAZUH_REGISTRATION_SERVER="{{ wazuh_manager }}"
+        state: present
+
+    - name: Copy Sysmon binary
+      ansible.windows.win_copy:
+        src: files/Sysmon64.exe
+        dest: "{{ sysmon_installer }}"
+
+    - name: Copy SwiftOnSecurity Sysmon config
+      ansible.windows.win_copy:
+        src: files/sysmonconfig.xml
+        dest: "{{ sysmon_config }}"
+
+    - name: Install Sysmon with config (idempotent)
+      ansible.windows.win_command: >
+        "{{ sysmon_installer }}" -accepteula -i "{{ sysmon_config }}"
+      args:
+        creates: C:\Windows\Sysmon64.exe
+
+    - name: Ensure Wazuh agent service is running
+      ansible.windows.win_service:
+        name: WazuhSvc
+        state: started
+        start_mode: auto
