@@ -1,11 +1,7 @@
 # ANAOS — Automated Network & Analysis Operations System
 
-ANAOS is a fully automated, open-source SOC built on Wazuh, Suricata/pfSense, Sysmon/Auditd, and Ansible. It achieved 100% detection recall and 0% false-positive rate across four MITRE ATT&CK-mapped attack scenarios, with full deployment in under 15 minutes via Ansible.
+ANAOS is a fully automated, open-source Security Operations Centre (SOC) built on Wazuh, Suricata/pfSense, Sysmon/Auditd, and Ansible. Designed and evaluated as part of a cybersecurity research project at ENSA Khouribga (2025-2026).
 
-Designed and evaluated as part of a cybersecurity research project at ENSA Khouribga (2025-2026).
+Across four MITRE ATT&CK-mapped attack scenarios, the system achieved 100% detection recall, 0% false-positive rate, and deployed end-to-end in under 15 minutes via Ansible.
 
 Full write-up: `docs/paper/ANAOS_Research_Chapter.pdf`
-
-![Network Topology](docs/images/topology.png)
-
-![ANAOS Dashboard](docs/images/dashboard.png)
