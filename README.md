@@ -1,8 +1,8 @@
 # ANAOS — Automated Network & Analysis Operations System
 
-ANAOS is a fully automated, open-source Security Operations Centre (SOC) built on Wazuh, Suricata/pfSense, Sysmon/Auditd, and Ansible. It was designed and evaluated as part of a cybersecurity research project at ENSA Khouribga (2025-2026), targeting a four-zone network topology representative of a small enterprise.
+ANAOS is a fully automated, open-source Security Operations Centre (SOC) built on Wazuh, Suricata/pfSense, Sysmon/Auditd, and Ansible. Designed and evaluated as part of a cybersecurity research project at ENSA Khouribga (2025-2026).
 
-Four MITRE ATT&CK-mapped attack scenarios were executed against the testbed: network reconnaissance, SQL injection, web login brute force, and Regsvr32-based payload execution. The system achieved 100% detection recall, 0% false-positive rate, and an end-to-end deployment time of under 15 minutes via Ansible automation.
+Across four MITRE ATT&CK-mapped attack scenarios, the system achieved 100% detection recall, 0% false-positive rate, and deployed end-to-end in under 15 minutes via Ansible.
 
 Full write-up: `docs/paper/ANAOS_Research_Chapter.pdf`
 
@@ -22,14 +22,14 @@ Telemetry from endpoints and the firewall feeds into the Wazuh Manager, which co
 
 ![ANAOS Dashboard](docs/images/dashboard.png)
 
-## Detection Coverage
+## Detected Techniques
 
-| Technique ID | Name | Tactic | Detected |
-|---|---|---|---|
-| T1595.002 | Active Scanning | Reconnaissance | Yes |
-| T1190 | Exploit Public-Facing Application (SQLi) | Initial Access | Yes |
-| T1110 | Brute Force | Credential Access | Yes |
-| T1218.010 | Regsvr32 (Squiblydoo) | Defense Evasion | Yes |
+| ID | Name | Tactic |
+|---|---|---|
+| T1595.002 | Active Scanning | Reconnaissance |
+| T1190 | Exploit Public-Facing App (SQLi) | Initial Access |
+| T1110 | Brute Force | Credential Access |
+| T1218.010 | Regsvr32 (Squiblydoo) | Defense Evasion |
 
 ## Limitations
 
