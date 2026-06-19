@@ -127,16 +127,12 @@ def fetch_parsed_alerts():
                     src_ip = ip_field
                     break
 
-            # =========================================================
             # 3. RECORD T0 ACROSS *ALL* LOGS (unfiltered)
-            # =========================================================
             if src_ip not in DB_STATE["ip_first_seen"] or raw_time_val < DB_STATE["ip_first_seen"][src_ip]:
                 DB_STATE["ip_first_seen"][src_ip] = raw_time_val
                 db_changed = True
 
-            # =========================================================
             # 4. FILTERING FOR DASHBOARD DISPLAY
-            # =========================================================
             rule    = alert.get("rule", {})
             rule_id = str(rule.get("id", ""))
             
