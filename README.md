@@ -42,22 +42,6 @@ Telemetry flows from endpoints and the firewall into the Wazuh Manager, which co
 | T1110 | Brute Force | Credential Access |
 | T1218.010 | Regsvr32 (Squiblydoo) | Defense Evasion |
 
-## Getting Started
-
-1. Copy `wazuh-rules/local_rules.xml` to `/var/ossec/etc/rules/` on the Wazuh Manager and restart it.
-2. Provision endpoints with the playbooks in `ansible/playbooks/` (requires your own inventory file).
-3. Run the dashboard on the Wazuh Manager host:
-```bash
-   python3 anaos_gui.py
-```
-   Edit the `CONFIG` dictionary at the top of the file for your environment, then open `http://<dashboard_ip>:8080/`.
-
 ## Limitations
 
 Evaluated in a noise-free lab with only 4 ATT&CK techniques covered, signature-based detection only, and single-analyst triage. Full discussion in the research chapter.
-
-## Authors
-
-Ismail Bajjou, Ousmane Issa Adam, Othmane Nechchadi, Yassine Sarih, Akram Zerbane
-
-Supervised by Dr. Yassine Maleh — ENSA Khouribga, 2025-2026
