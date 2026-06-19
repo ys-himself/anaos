@@ -18,7 +18,7 @@ Telemetry from endpoints and the firewall feeds into the Wazuh Manager, which co
 
 ## Dashboard
 
-`anaos_gui.py` is a self-contained Python HTTP server (no external dependencies) implementing real-time alert ingestion, triage persistence, and metric computation. It exposes a single-page dashboard with live KPIs, active-agent tracking, and a sortable triage console with MITRE ATT&CK-tagged context.
+`anaos_gui.py` is a self-contained Python dashboard for real-time alert triage, ATT&CK enrichment, and SOC metric tracking.
 
 ![ANAOS Dashboard](docs/images/dashboard.png)
 
