@@ -4,4 +4,4 @@ ANAOS is a fully automated, open-source Security Operations Centre (SOC) built o
 
 Across four MITRE ATT&CK-mapped attack scenarios, the system achieved 100% detection recall, 0% false-positive rate, and deployed end-to-end in under 15 minutes via Ansible.
 
-Full write-up: `docs/paper/ANAOS_Research_Chapter.pdf`
+Full write-up: [ANAOS Research Chapter](docs/paper/ANAOS_Research_Chapter.pdf)
