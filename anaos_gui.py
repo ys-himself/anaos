@@ -111,7 +111,7 @@ def fetch_parsed_alerts():
         try:
             alert   = json.loads(line)
             
-            # 1. Extraction du timestamp en premier
+            # 1. Extract the timestamp
             ts_str = alert.get("timestamp", "")
             if not ts_str:
                 continue
@@ -119,7 +119,7 @@ def fetch_parsed_alerts():
             utc_time = datetime.strptime(ts_str[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
             raw_time_val = utc_time.timestamp()
 
-            # 2. Extraction de l'IP en deuxième
+            # 2. Extract the source IP
             src_ip = "local"
             for ip_field in [alert.get("data", {}).get("src_ip"), alert.get("data", {}).get("srcip"), 
                              alert.get("network", {}).get("srcip"), alert.get("agent", {}).get("ip")]:
@@ -128,22 +128,22 @@ def fetch_parsed_alerts():
                     break
 
             # =========================================================
-            # 3. ENREGISTREMENT DE T0 SUR *TOUS* LES LOGS (Sans filtrage)
+            # 3. RECORD T0 ACROSS *ALL* LOGS (unfiltered)
             # =========================================================
             if src_ip not in DB_STATE["ip_first_seen"] or raw_time_val < DB_STATE["ip_first_seen"][src_ip]:
                 DB_STATE["ip_first_seen"][src_ip] = raw_time_val
                 db_changed = True
 
             # =========================================================
-            # 4. FILTRAGE POUR L'AFFICHAGE DU DASHBOARD
+            # 4. FILTERING FOR DASHBOARD DISPLAY
             # =========================================================
             rule    = alert.get("rule", {})
             rule_id = str(rule.get("id", ""))
             
             if rule_id not in CONFIG["target_rule_ids"]:
-                continue # Si ce n'est pas une alerte ciblée, on s'arrête là pour l'affichage
+                continue # Not a targeted alert, stop here for display purposes
                 
-            # --- À partir d'ici, on ne traite que les alertes de votre liste ---
+            # --- From here on, only alerts from your target list are processed ---
             level  = int(rule.get("level", 0))
             desc   = str(rule.get("description", "Unknown Event"))
             groups = rule.get("groups", [])
@@ -170,7 +170,7 @@ def fetch_parsed_alerts():
                 "alert_id":       generate_alert_id(ts_str, rule_id, src_ip),
                 "timestamp":      local_time.strftime("%Y-%m-%d %H:%M:%S"),
                 "raw_time":       raw_time_val,
-                "t0_time":        DB_STATE["ip_first_seen"][src_ip], # On attache le T0 trouvé au point 3
+                "t0_time":        DB_STATE["ip_first_seen"][src_ip], # Attach the T0 found in step 3
                 "level":          level,
                 "desc":           display_desc,
                 "raw_desc":       desc,
