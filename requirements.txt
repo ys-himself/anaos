@@ -1,3 +1,0 @@
-# anaos_gui.py uses only the Python standard library (no external dependencies).
-# This file is kept for completeness / future extensions (e.g. adding a real web framework,
-# auth, or a requests-based health-check script).
