@@ -1,15 +1,3 @@
-<!--
-  ANAOS Custom Detection Rules
-  File: local_rules.xml
-  Deploy to: /var/ossec/etc/rules/local_rules.xml on the Wazuh Manager
-  Group: anaos_soc_unified
-
-  Maps four MITRE ATT&CK techniques to custom Wazuh correlation rules:
-    100115 -> T1110     Brute Force: Web Login          (chains on Suricata SID 86600)
-    100116 -> T1190     Exploit Public-Facing App (SQLi) (chains on Suricata SID 86601)
-    100051 -> T1218.010 Regsvr32 / Squiblydoo            (chains on Sysmon SID 61603)
-    100104 -> T1595.002 Active Scanning (Nmap recon)     (chains on the "web" rule group)
--->
 <group name="anaos_soc_unified">
 
   <!-- ============================================================
